@@ -1,0 +1,804 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>gempy_api &#8212; GemPy 2.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for gempy_api</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This file is part of gempy.</span>
+
+<span class="sd">    gempy is free software: you can redistribute it and/or modify</span>
+<span class="sd">    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">    (at your option) any later version.</span>
+
+<span class="sd">    Foobar is distributed in the hope that it will be useful,</span>
+<span class="sd">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">    GNU General Public License for more details.</span>
+
+<span class="sd">    You should have received a copy of the GNU General Public License</span>
+<span class="sd">    along with gempy.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">    Created on 10/10 /2018</span>
+
+<span class="sd">    @author: Miguel de la Varga</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pn</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">gempy.core.model</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">DataMutation</span><span class="p">,</span> <span class="n">AdditionalData</span><span class="p">,</span> <span class="n">Faults</span><span class="p">,</span> <span class="n">Grid</span><span class="p">,</span>\
+    <span class="n">MetaData</span><span class="p">,</span> <span class="n">Orientations</span><span class="p">,</span> <span class="n">RescaledData</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">SurfacePoints</span><span class="p">,</span>\
+    <span class="n">Surfaces</span><span class="p">,</span> <span class="n">Options</span><span class="p">,</span> <span class="n">Structure</span><span class="p">,</span> <span class="n">KrigingParameters</span>
+<span class="kn">from</span> <span class="nn">gempy.core.solution</span> <span class="kn">import</span> <span class="n">Solution</span>
+<span class="kn">from</span> <span class="nn">gempy.utils.meta</span> <span class="kn">import</span> <span class="n">setdoc</span><span class="p">,</span> <span class="n">setdoc_pro</span>
+<span class="kn">import</span> <span class="nn">gempy.utils.docstring</span> <span class="k">as</span> <span class="nn">ds</span>
+<span class="kn">from</span> <span class="nn">gempy.core.interpolator</span> <span class="kn">import</span> <span class="n">InterpolatorModel</span>
+<span class="kn">from</span> <span class="nn">gempy.addons.gempy_to_rexfile</span> <span class="kn">import</span> <span class="n">geomodel_to_rex</span>
+<span class="kn">from</span> <span class="nn">gempy.api_modules.getters</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="c1"># This warning comes from numpy complaining about a theano optimization</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s1">&#39;.* a non-tuple sequence for multidimensional indexing is deprecated; use*.&#39;</span><span class="p">,</span>
+                        <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="c1"># region get</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+    <span class="k">pass</span>
+<span class="c1"># end region</span>
+
+
+<span class="c1"># region edit</span>
+<span class="k">def</span> <span class="nf">edit</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">data_object</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># end region</span>
+
+<span class="c1"># region Model</span>
+<div class="viewcode-block" id="create_model"><a class="viewcode-back" href="../GemPy API/gempy_api.create_model.html#gempy_api.create_model">[docs]</a><span class="nd">@setdoc</span><span class="p">(</span><span class="n">Model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;default_project&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a Model object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Model</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">project_name</span><span class="p">)</span></div>
+
+
+<span class="c1"># endregion</span>
+
+
+<span class="c1"># region Series functionality</span>
+<span class="c1"># @setdoc(Model.map_series_to_surfaces.__doc__)</span>
+<span class="c1"># def set_series(geo_model: Model, mapping_object: Union[dict, pn.Categorical] = None,</span>
+<span class="c1">#                set_series=True, sort_data: bool = True):</span>
+<span class="c1">#     warnings.warn(&quot;set_series will get deprecated in the next version of gempy. It still exist only to keep&quot;</span>
+<span class="c1">#                   &quot;the behaviour equal to older version. Use map_series_to_surfaces isnead.&quot;, FutureWarning)</span>
+<span class="c1">#</span>
+<span class="c1">#     map_series_to_surfaces(geo_model, mapping_object, set_series, sort_data)</span>
+
+
+<div class="viewcode-block" id="map_series_to_surfaces"><a class="viewcode-back" href="../GemPy API/gempy_api.map_series_to_surfaces.html#gempy_api.map_series_to_surfaces">[docs]</a><span class="nd">@setdoc</span><span class="p">(</span><span class="n">Model</span><span class="o">.</span><span class="n">map_series_to_surfaces</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">map_series_to_surfaces</span><span class="p">(</span><span class="n">geo_model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">mapping_object</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">pn</span><span class="o">.</span><span class="n">Categorical</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="n">set_series</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort_geometric_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">remove_unused_series</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">map_series_to_surfaces</span><span class="p">(</span><span class="n">mapping_object</span><span class="p">,</span> <span class="n">set_series</span><span class="p">,</span> <span class="n">sort_geometric_data</span><span class="p">,</span> <span class="n">remove_unused_series</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span></div>
+
+
+<span class="c1"># endregion</span>
+
+
+<span class="c1"># region Point-Orientation functionality</span>
+<div class="viewcode-block" id="read_csv"><a class="viewcode-back" href="../GemPy API/gempy_api.read_csv.html#gempy_api.read_csv">[docs]</a><span class="nd">@setdoc</span><span class="p">([</span><span class="n">Model</span><span class="o">.</span><span class="n">read_data</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">read_csv</span><span class="p">(</span><span class="n">geo_model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">path_i</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_o</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">path_i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">path_o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">read_data</span><span class="p">(</span><span class="n">path_i</span><span class="p">,</span> <span class="n">path_o</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="c1"># region Point-Orientation functionality</span>
+<span class="nd">@setdoc_pro</span><span class="p">([</span><span class="n">Model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">set_geometric_data</span><span class="p">(</span><span class="n">geo_model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">surface_points_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orientations_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Function to set directly pandas.Dataframes to the gempy geometric data objects</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        geo_model: [s0]</span>
+<span class="sd">        surface_points_df:  A pn.Dataframe object with X, Y, Z, and surface columns</span>
+<span class="sd">        orientations_df: A pn.Dataframe object with X, Y, Z, surface columns and pole or orientation columns</span>
+<span class="sd">        **kwargs:</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Modified df</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">r_</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">surface_points_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">set_surface_points</span><span class="p">(</span><span class="n">surface_points_df</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">r_</span> <span class="o">=</span> <span class="s1">&#39;surface_points&#39;</span>
+
+    <span class="k">elif</span> <span class="n">orientations_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">set_orientations</span><span class="p">(</span><span class="n">orientations_df</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">r_</span> <span class="o">=</span> <span class="s1">&#39;data&#39;</span> <span class="k">if</span> <span class="n">r_</span> <span class="o">==</span> <span class="s1">&#39;surface_points&#39;</span> <span class="k">else</span> <span class="s1">&#39;orientations&#39;</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;You need to pass at least one dataframe&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">get_data</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">itype</span><span class="o">=</span><span class="n">r_</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="set_orientation_from_surface_points"><a class="viewcode-back" href="../GemPy API/gempy_api.set_orientation_from_surface_points.html#gempy_api.set_orientation_from_surface_points">[docs]</a><span class="k">def</span> <span class="nf">set_orientation_from_surface_points</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">indices_array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create and set orientations from at least 3 points of the :attr:`gempy.data_management.InputData.surface_points`</span>
+<span class="sd">     Dataframe</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        geo_model (:class:`Model`):</span>
+<span class="sd">        indices_array (array-like): 1D or 2D array with the pandas indices of the</span>
+<span class="sd">          :attr:`surface_points`. If 2D every row of the 2D matrix will be used to create an</span>
+<span class="sd">          orientation</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :attr:`orientations`: Already updated inplace</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">indices_array</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">indices_array</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;surface&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;The interface points must belong to the same surface&#39;</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">ori_parameters</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">create_orientation_from_surface_points</span><span class="p">(</span>
+            <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">add_orientations</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Z</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                   <span class="n">orientation</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">pole_vector</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">],</span>
+                                   <span class="n">surface</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">indices_array</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">indices_array</span><span class="p">:</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;surface&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+            <span class="k">assert</span> <span class="n">form</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;The interface points must belong to the same surface&#39;</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">form</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ori_parameters</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">create_orientation_from_surface_points</span><span class="p">(</span>
+                <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+            <span class="n">geo_model</span><span class="o">.</span><span class="n">add_orientations</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Z</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                       <span class="n">orientation</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">pole_vector</span><span class="o">=</span><span class="n">ori_parameters</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">],</span>
+                                       <span class="n">surface</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span></div>
+
+
+<span class="c1"># endregion</span>
+
+
+<span class="c1"># region Interpolator functionality</span>
+<span class="c1"># @setdoc([InterpolatorModel.__doc__])</span>
+<span class="c1"># @setdoc_pro([Model.__doc__, ds.compile_theano, ds.theano_optimizer])</span>
+<span class="c1"># def set_interpolation_data(*args, **kwargs):</span>
+<span class="c1">#     warnings.warn(&#39;set_interpolation_data will be deprecrated in GemPy 2.2. Use &#39;</span>
+<span class="c1">#                   &#39;set_interpolator instead.&#39;, DeprecationWarning)</span>
+<span class="c1">#     return set_interpolator(*args, **kwargs)</span>
+
+
+<span class="nd">@setdoc</span><span class="p">([</span><span class="n">InterpolatorModel</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">])</span>
+<span class="nd">@setdoc_pro</span><span class="p">([</span><span class="n">Model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">compile_theano</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">theano_optimizer</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">set_interpolator</span><span class="p">(</span><span class="n">geo_model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">compile_theano</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                     <span class="n">theano_optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">update_structure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">update_kriging</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method to create a graph and compile the theano code to compute the interpolation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        geo_model (:class:`Model`): [s0]</span>
+<span class="sd">        output (list[str:{geo, grav}]): type of interpolation.</span>
+<span class="sd">        compile_theano (bool): [s1]</span>
+<span class="sd">        theano_optimizer (str {&#39;fast_run&#39;, &#39;fast_compile&#39;}): [s2]</span>
+<span class="sd">        verbose:</span>
+<span class="sd">        update_kriging (bool): reset kriging values to its default.</span>
+<span class="sd">        update_structure (bool): sync Structure instance before setting theano graph.</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        -  pos_density (Optional[int]): Only necessary when type=&#39;grav&#39;. Location on the Surfaces().df</span>
+<span class="sd">         where density is located (starting on id being 0).</span>
+<span class="sd">        - Vs</span>
+<span class="sd">        - pos_magnetics</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># output = list(output)</span>
+    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;geology&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Output must be a list.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># TODO Geology is necessary for everthing?</span>
+    <span class="k">if</span> <span class="s1">&#39;gravity&#39;</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">and</span> <span class="s1">&#39;geology&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;geology&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;magnetics&#39;</span> <span class="ow">in</span> <span class="n">output</span> <span class="ow">and</span> <span class="s1">&#39;geology&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;geology&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;type warn is going to be deprecated. Use output insted&#39;</span><span class="p">,</span> <span class="ne">FutureWarning</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">type_</span>
+
+    <span class="k">if</span> <span class="n">theano_optimizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">,</span> <span class="s1">&#39;theano_optimizer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">theano_optimizer</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">,</span> <span class="s1">&#39;verbosity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">verbose</span>
+
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">create_theano_graph</span><span class="p">(</span><span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                               <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># TODO add kwargs</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">rescaling</span><span class="o">.</span><span class="n">rescale_data</span><span class="p">()</span>
+    <span class="n">update_additional_data</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">update_structure</span><span class="o">=</span><span class="n">update_structure</span><span class="p">,</span> <span class="n">update_kriging</span><span class="o">=</span><span class="n">update_kriging</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">sort_table</span><span class="p">()</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">sort_table</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s1">&#39;gravity&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">pos_density</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pos_density&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">tz</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tz&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">centered_grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">set_theano_shared_gravity</span><span class="p">(</span><span class="n">tz</span><span class="p">,</span> <span class="n">pos_density</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;magnetics&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">pos_magnetics</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pos_magnetics&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">Vs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Vs&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+        <span class="n">incl</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;incl&#39;</span><span class="p">)</span>
+        <span class="n">decl</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;decl&#39;</span><span class="p">)</span>
+        <span class="n">B_ext</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;B_ext&#39;</span><span class="p">,</span> <span class="mf">52819.8506939139e-9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">centered_grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">set_theano_shared_magnetics</span><span class="p">(</span><span class="n">Vs</span><span class="p">,</span> <span class="n">pos_magnetics</span><span class="p">,</span> <span class="n">incl</span><span class="p">,</span> <span class="n">decl</span><span class="p">,</span> <span class="n">B_ext</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;topology&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+        <span class="c1"># This id is necessary for topology</span>
+        <span class="n">id_list</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;isFault&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cumcount</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">add_surface_values</span><span class="p">(</span><span class="n">id_list</span><span class="p">,</span> <span class="s1">&#39;topology_id&#39;</span><span class="p">)</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">set_theano_shared_topology</span><span class="p">()</span>
+
+        <span class="c1"># TODO it is missing to pass to theano the position of topology_id</span>
+
+    <span class="k">if</span> <span class="n">compile_theano</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">set_all_shared_parameters</span><span class="p">(</span><span class="n">reset_ctrl</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">compile_th_fn_geo</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">grid</span> <span class="o">==</span> <span class="s1">&#39;shared&#39;</span><span class="p">:</span>
+            <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">set_theano_shared_grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Kriging values: </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">kriging_data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolator</span>
+
+
+<span class="c1"># endregion</span>
+
+
+<span class="c1"># region Additional data functionality</span>
+<div class="viewcode-block" id="update_additional_data"><a class="viewcode-back" href="../GemPy API/gempy_api.update_additional_data.html#gempy_api.update_additional_data">[docs]</a><span class="k">def</span> <span class="nf">update_additional_data</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">update_structure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">update_kriging</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;This function is going to be deprecated. Use Model.update_additional_data instead&#39;</span><span class="p">,</span>
+                  <span class="ne">DeprecationWarning</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">update_additional_data</span><span class="p">(</span><span class="n">update_structure</span><span class="p">,</span> <span class="n">update_kriging</span><span class="p">)</span></div>
+
+
+<span class="c1"># endregion</span>
+
+
+<span class="c1"># region Computing the model</span>
+<div class="viewcode-block" id="compute_model"><a class="viewcode-back" href="../GemPy API/gempy_api.compute_model.html#gempy_api.compute_model">[docs]</a><span class="nd">@setdoc_pro</span><span class="p">([</span><span class="n">Model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">Solution</span><span class="o">.</span><span class="n">compute_marching_cubes_regular_grid</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
+             <span class="n">Model</span><span class="o">.</span><span class="n">set_surface_order_from_solution</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">compute_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compute_mesh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reset_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reset_scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">reset_block</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_surfaces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">set_solutions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solution</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the geological model and any extra output given in the additional data option.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (:class:`Model`): [s0]</span>
+<span class="sd">        output (str {&#39;geology&#39;, &#39;gravity&#39;}): Compute the lithologies or gravity</span>
+<span class="sd">        compute_mesh (bool): if True compute marching cubes: [s1]</span>
+<span class="sd">        reset_weights (bool): Not Implemented</span>
+<span class="sd">        reset_scalar (bool): Not Implemented</span>
+<span class="sd">        reset_block (bool): Not Implemented</span>
+<span class="sd">        sort_surfaces (bool): if True call Model.set_surface_order_from_solution: [s2]</span>
+<span class="sd">        debug (bool): if True, the computed interpolation are not stored in any object but instead returned</span>
+<span class="sd">        set_solutions (bool): Default True. If True set the results into the :class:`Solutions` linked object.</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        compute_mesh_options (dict): options for the marching cube function.</span>
+<span class="sd">            1) rescale: True</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`Solutions`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: Assert frame by frame that all data is like is supposed. Otherwise,</span>
+
+    <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">structure_data</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">,</span> <span class="s1">&#39;len surfaces surface_points&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> \
+        <span class="s1">&#39;To compute the model is necessary at least 2 interface points per layer&#39;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">len_series_i</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">len_series_o</span><span class="p">),</span> \
+        <span class="s1">&#39;Every Series/Fault need at least 1 orientation and 2 surfaces points.&#39;</span>
+
+    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Argument output has no effect anymore and will be deprecated in GemPy 2.2.&#39;</span>
+                      <span class="s1">&#39;Set the output only in gempy.set_interpolator.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">get_python_input_block</span><span class="p">(</span><span class="n">append_control</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fault_drift</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">reset_flow_control_initial_results</span><span class="p">(</span><span class="n">reset_weights</span><span class="p">,</span> <span class="n">reset_scalar</span><span class="p">,</span> <span class="n">reset_block</span><span class="p">)</span>
+
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">interpolator</span><span class="o">.</span><span class="n">theano_function</span><span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">debug</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">set_solutions</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sol</span>
+
+    <span class="k">elif</span> <span class="n">set_solutions</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+
+        <span class="c1"># Set geology:</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">active_grids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">True_</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">solutions</span><span class="o">.</span><span class="n">set_solution_to_regular_grid</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">compute_mesh</span><span class="o">=</span><span class="n">compute_mesh</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">active_grids</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">True_</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">solutions</span><span class="o">.</span><span class="n">set_solution_to_custom</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">active_grids</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">True_</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">solutions</span><span class="o">.</span><span class="n">set_solution_to_topography</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">active_grids</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">True_</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">solutions</span><span class="o">.</span><span class="n">set_solution_to_sections</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+        <span class="c1"># Set gravity</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">solutions</span><span class="o">.</span><span class="n">fw_gravity</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span>
+
+        <span class="c1"># TODO: [X] Set magnetcs and [ ] set topology @A.Schaaf probably it should populate the topology object?</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">solutions</span><span class="o">.</span><span class="n">fw_magnetics</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">sort_surfaces</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">set_surface_order_from_solution</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">solutions</span></div>
+
+
+<div class="viewcode-block" id="compute_model_at"><a class="viewcode-back" href="../GemPy API/gempy_api.compute_model_at.html#gempy_api.compute_model_at">[docs]</a><span class="nd">@setdoc</span><span class="p">([</span><span class="n">Model</span><span class="o">.</span><span class="n">set_custom_grid</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">compute_model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">],</span> <span class="n">indent</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compute_model_at</span><span class="p">(</span><span class="n">new_grid</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function creates a new custom grid and deactivate all the other grids and compute the model there:</span>
+
+<span class="sd">    This function does the same as :func:`compute_model` plus the addition functionallity of</span>
+<span class="sd">     passing a given array of points where evaluate the model instead of using the :class:`gempy.core.data.GridClass`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        kwargs: :func:`compute_model` arguments</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`Solution`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># #TODO create backup of the mesh and a method to go back to it</span>
+    <span class="c1">#     set_grid(model, Grid(&#39;custom_grid&#39;, custom_grid=new_grid))</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">deactivate_all_grids</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">set_custom_grid</span><span class="p">(</span><span class="n">new_grid</span><span class="p">)</span>
+
+    <span class="c1"># Now we are good to compute the model again only in the new point</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">compute_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">set_solutions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sol</span></div>
+
+
+<span class="c1"># endregion</span>
+
+
+<span class="c1"># region Solution</span>
+
+
+<span class="c1"># endregion</span>
+
+
+<span class="c1"># region Model level functions</span>
+
+
+<div class="viewcode-block" id="create_data"><a class="viewcode-back" href="../GemPy API/gempy_api.create_data.html#gempy_api.create_data">[docs]</a><span class="k">def</span> <span class="nf">create_data</span><span class="p">(</span><span class="n">extent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span> <span class="n">resolution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+                <span class="n">project_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;default_project&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a :class:`gempy.core.model.Model` object and initialize some of the main functions such as:</span>
+
+<span class="sd">    - Grid :class:`gempy.core.data.GridClass`: To regular grid.</span>
+<span class="sd">    - read_csv: SurfacePoints and orientations: From csv files</span>
+<span class="sd">    - set_values to default</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        extent (list or array):  [x_min, x_max, y_min, y_max, z_min, z_max]. Extent for the visualization of data</span>
+<span class="sd">         and default of for the grid class.</span>
+<span class="sd">        resolution (list or array): [nx, ny, nz]. Resolution for the visualization of data</span>
+<span class="sd">         and default of for the grid class.</span>
+<span class="sd">        project_name (str)</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        path_i: Path to the data bases of surface_points. Default os.getcwd(),</span>
+<span class="sd">        path_o: Path to the data bases of orientations. Default os.getcwd()</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`Model`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">geo_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">project_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">init_data</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="init_data"><a class="viewcode-back" href="../GemPy API/gempy_api.init_data.html#gempy_api.init_data">[docs]</a><span class="nd">@setdoc_pro</span><span class="p">([</span><span class="n">Model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">init_data</span><span class="p">(</span><span class="n">geo_model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">extent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">resolution</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a :class:`gempy.core.model.Model` object and initialize some of the main functions such as:</span>
+
+<span class="sd">    - Grid :class:`gempy.core.data.GridClass`: To regular grid.</span>
+<span class="sd">    - read_csv: SurfacePoints and orientations: From csv files</span>
+<span class="sd">    - set_values to default</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        geo_model (:class:Model): [s0]</span>
+<span class="sd">        extent (list or array):  [x_min, x_max, y_min, y_max, z_min, z_max]. Extent for the visualization of data</span>
+<span class="sd">         and default of for the grid class.</span>
+<span class="sd">        resolution (list or array): [nx, ny, nz]. Resolution for the visualization of data</span>
+<span class="sd">         and default of for the grid class.</span>
+<span class="sd">        project_name (str)</span>
+
+<span class="sd">    Keyword Args:</span>
+
+<span class="sd">        path_i: Path to the data bases of surface_points. Default os.getcwd(),</span>
+<span class="sd">        path_o: Path to the data bases of orientations. Default os.getcwd()</span>
+<span class="sd">        surface_points_df: A pn.Dataframe object with X, Y, Z, and surface columns</span>
+<span class="sd">        orientations_df: A pn.Dataframe object with X, Y, Z, surface columns and pole or orientation columns</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`gempy.data_management.InputData`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Regular grid won</span><span class="se">\&#39;</span><span class="s1">t be initialize, you will have to create a gridafterwards. See gempy.set_grid&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">set_regular_grid</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;path_i&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">or</span> <span class="s1">&#39;path_o&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">read_csv</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;surface_points_df&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">set_surface_points</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;surface_points_df&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># if we set the surfaces names with surfaces they cannot be set again on orientations or pandas will complain.</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;update_surfaces&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="s1">&#39;orientations_df&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">set_orientations</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;orientations_df&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">geo_model</span></div>
+
+
+<span class="c1"># endregion</span>
+
+
+<div class="viewcode-block" id="activate_interactive_df"><a class="viewcode-back" href="../GemPy API/gempy_api.activate_interactive_df.html#gempy_api.activate_interactive_df">[docs]</a><span class="nd">@setdoc_pro</span><span class="p">([</span><span class="n">Model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">],</span> <span class="p">)</span>
+<span class="k">def</span> <span class="nf">activate_interactive_df</span><span class="p">(</span><span class="n">geo_model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">plot_object</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Experimental: Activate the use of the QgridModelIntegration:</span>
+<span class="sd">    TODO evaluate the use of this functionality</span>
+
+<span class="sd">    Notes: Since this feature is for advance levels we will keep only object oriented functionality. Should we</span>
+<span class="sd">    add in the future,</span>
+
+<span class="sd">    TODO: copy docstrings to QgridModelIntegration</span>
+<span class="sd">    Args:</span>
+<span class="sd">        geo_model: [s0]</span>
+<span class="sd">        plot_object: GemPy plot object (so far only vtk is available)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`QgridModelIntegration`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">gempy.core.qgrid_integration</span> <span class="kn">import</span> <span class="n">QgridModelIntegration</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;qgrid package is not installed. No interactive dataframes available.&#39;</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">qi</span> <span class="o">=</span> <span class="n">QgridModelIntegration</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">plot_object</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">qi</span></div>
+
+
+<span class="c1"># region Save</span>
+<div class="viewcode-block" id="save_model_to_pickle"><a class="viewcode-back" href="../GemPy API/gempy_api.save_model_to_pickle.html#gempy_api.save_model_to_pickle">[docs]</a><span class="nd">@setdoc</span><span class="p">(</span><span class="n">Model</span><span class="o">.</span><span class="n">save_model_pickle</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">save_model_to_pickle</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">save_model_pickle</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="save_model"><a class="viewcode-back" href="../GemPy API/gempy_api.save_model.html#gempy_api.save_model">[docs]</a><span class="nd">@setdoc</span><span class="p">(</span><span class="n">Model</span><span class="o">.</span><span class="n">save_model</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">topography</span><span class="o">.</span><span class="n">topo</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="load_model_pickle"><a class="viewcode-back" href="../GemPy API/gempy_api.load_model_pickle.html#gempy_api.load_model_pickle">[docs]</a><span class="nd">@setdoc</span><span class="p">(</span><span class="n">Model</span><span class="o">.</span><span class="n">load_model_pickle</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_model_pickle</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read InputData object from python pickle.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">       path (str): path where save the pickle</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`Model`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Model</span><span class="o">.</span><span class="n">load_model_pickle</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../GemPy API/gempy_api.load_model.html#gempy_api.load_model">[docs]</a><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recompile</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loading model saved with model.save_model function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: name of folder with saved files</span>
+<span class="sd">        path (str): path to folder directory</span>
+<span class="sd">        recompile (bool): if true, theano functions will be recompiled</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`Model`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: Divide each dataframe in its own function</span>
+    <span class="c1"># TODO: Include try except in case some of the datafiles is missing</span>
+    <span class="c1">#</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="c1"># create model with extent and resolution from csv - check</span>
+    <span class="n">geo_model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">()</span>
+    <span class="n">init_data</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_extent.npy&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_resolution.npy&#39;</span><span class="p">))</span>
+    <span class="c1"># rel_matrix = np.load()</span>
+    <span class="c1"># set additonal data</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">kriging_data</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_kriging_data.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                            <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;range&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;$C_o$&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+                                                                   <span class="s1">&#39;drift equations&#39;</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span>
+                                                                   <span class="s1">&#39;nugget grad&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+                                                                   <span class="s1">&#39;nugget scalar&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">})</span>
+
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">kriging_data</span><span class="o">.</span><span class="n">str2int_u_grade</span><span class="p">()</span>
+
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_options.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                       <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span>
+                                                              <span class="s1">&#39;theano_optimizer&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;device&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span>
+                                                              <span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="nb">object</span><span class="p">})</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dtype&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">([</span><span class="s1">&#39;float32&#39;</span><span class="p">,</span> <span class="s1">&#39;float64&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;theano_optimizer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">([</span><span class="s1">&#39;fast_run&#39;</span><span class="p">,</span> <span class="s1">&#39;fast_compile&#39;</span><span class="p">],</span>
+                                                                                <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;device&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">([</span><span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="s1">&#39;cuda&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">([</span><span class="s1">&#39;geology&#39;</span><span class="p">,</span> <span class="s1">&#39;gradients&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># do series properly - this needs proper check</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_series.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                      <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;order_series&#39;</span><span class="p">:</span> <span class="s1">&#39;int32&#39;</span><span class="p">,</span> <span class="s1">&#39;BottomRelation&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">})</span>
+    <span class="n">series_index</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">CategoricalIndex</span><span class="p">(</span><span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="c1"># geo_model.series.df.index = pn.CategoricalIndex(series_index)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">series_index</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;BottomRelation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">([</span><span class="s1">&#39;Erosion&#39;</span><span class="p">,</span> <span class="s1">&#39;Onlap&#39;</span><span class="p">,</span> <span class="s1">&#39;Fault&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;isActive&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;isActive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">cat_series</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># do faults properly - check</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_faults.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                      <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;isFault&#39;</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;isFinite&#39;</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">})</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">series_index</span>
+
+    <span class="c1"># # do faults relations properly - this is where I struggle</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">faults_relations_df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_faults_relations.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">faults_relations_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">series_index</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">faults_relations_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">series_index</span>
+
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">faults</span><span class="o">.</span><span class="n">faults_relations_df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># do surfaces properly</span>
+    <span class="n">surf_df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_surfaces.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                          <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;surface&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;series&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;order_surfaces&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span> <span class="s1">&#39;isBasement&#39;</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">})</span>
+    <span class="n">c_</span> <span class="o">=</span> <span class="n">surf_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">~</span><span class="p">(</span><span class="n">surf_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">_columns_vis_drop</span><span class="p">))]</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">c_</span><span class="p">]</span> <span class="o">=</span> <span class="n">surf_df</span><span class="p">[</span><span class="n">c_</span><span class="p">]</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;series&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">reorder_categories</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">geo_model</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+                                                           <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">sort_surfaces</span><span class="p">()</span>
+
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">generate_colordict</span><span class="p">()</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;series&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">(</span><span class="n">cat_series</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;isActive&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;isActive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">cat_surfaces</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">surfaces</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;surface&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># do orientations properly, reset all dtypes</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_orientations.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                            <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;X_r&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Y_r&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_r&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;dip&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;azimuth&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;polarity&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;surface&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;series&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span> <span class="s1">&#39;order_series&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span><span class="p">})</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;surface&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">(</span><span class="n">cat_surfaces</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;series&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">(</span><span class="n">cat_series</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># do surface_points properly, reset all dtypes</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_surface_points.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                              <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+                                                     <span class="s1">&#39;X_r&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Y_r&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_r&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+                                                     <span class="s1">&#39;surface&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;series&#39;</span><span class="p">:</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span>
+                                                     <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span><span class="p">,</span> <span class="s1">&#39;order_series&#39;</span><span class="p">:</span> <span class="s1">&#39;int64&#39;</span><span class="p">})</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;surface&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">(</span><span class="n">cat_surfaces</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;series&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">(</span><span class="n">cat_series</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Code to add smooth columns for models saved before gempy 2.0bdev4</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;smooth&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;smooth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-7</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;smooth&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">geo_model</span><span class="o">.</span><span class="n">orientations</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;smooth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+    <span class="c1"># update structure from loaded input</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">additional_data</span><span class="o">.</span><span class="n">structure_data</span><span class="o">.</span><span class="n">update_structure_from_input</span><span class="p">()</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">rescaling</span><span class="o">.</span><span class="n">rescale_data</span><span class="p">()</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">update_from_series</span><span class="p">()</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">update_from_surfaces</span><span class="p">()</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">update_structure</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">recompile</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">set_interpolation_data</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">geo_model</span></div>
+<span class="c1"># endregion</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/./logos/gempy.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">GemPy</h1>
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=cgre-aachen&repo=gempy&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/cgre-aachen/gempy">
+    <img
+        alt="https://secure.travis-ci.org/cgre-aachen/gempy.svg?branch=master"
+        src="https://secure.travis-ci.org/cgre-aachen/gempy.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">GemPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code.html">Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Gempy Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About us</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017-2020, CGRE-Aachen Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

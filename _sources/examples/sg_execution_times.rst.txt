@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr_examples_sg_execution_times:
+
+Computation times
+=================
+**01:15.175** total execution time for **examples** files:
+
++------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_Horizontal.py` (``Horizontal.py``) | 01:15.175 | 0.0 MB |
++------------------------------------------------------------+-----------+--------+
